@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-gothic: 'UnifrakturMaguntia', serif;
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Crimson Text', serif;
+  --font-mono: 'Courier Prime', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #FDFAF4;
+  color: #0D0D0D;
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Page border frame */
+.page-frame {
+  position: fixed;
+  inset: 10px;
+  border: 3px solid #111111;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Gothic heading */
+.font-gothic {
+  font-family: 'UnifrakturMaguntia', serif;
+}
+
+.font-display {
+  font-family: 'Cinzel', serif;
+}
+
+.font-mono {
+  font-family: 'Courier Prime', monospace;
+}
+
+/* Horizontal scroll gallery */
+.gallery-track {
+  display: flex;
+  gap: 0;
+  height: 100%;
+  will-change: transform;
+  cursor: grab;
+}
+
+.gallery-track:active {
+  cursor: grabbing;
+}
+
+/* Lightbox */
+.lightbox-overlay {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Scrollbar hide for gallery */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Red underline for links */
+a.gothic-link {
+  text-decoration: none;
+  border-bottom: 1.5px solid #B91C1C;
+  color: inherit;
+  transition: color 0.2s;
+}
+a.gothic-link:hover {
+  color: #B91C1C;
+}
+
+/* Filter pill */
+.filter-pill {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1.5px solid #111111;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+  color: #0D0D0D;
+}
+
+.filter-pill.active {
+  background: #111111;
+  color: #FDFAF4;
+}
+
+.filter-pill:hover:not(.active) {
+  background: #11111110;
+}
+
+/* Availability dot */
+.dot-available {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #B91C1C;
+  display: inline-block;
+}
+
+.dot-sold {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #444444;
+  display: inline-block;
+}
