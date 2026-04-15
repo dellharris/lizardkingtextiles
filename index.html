@@ -1261,6 +1261,12 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
   const light      = document.getElementById('portal-light');
   let rubs = 0, unlocked = false, lastX = null;
 
+  // iOS: replace rub mechanic with a single tap anywhere
+  if (document.documentElement.classList.contains('ios-mode')) {
+    hint.textContent = '\u2726 tap to enter \u2726';
+    screen.addEventListener('click', () => { if (!unlocked) go(); });
+  }
+
   function onRub(e) {
     if (unlocked) return;
     const x = Math.round((e.clientX || 0) / 5);
@@ -1648,7 +1654,7 @@ const artworks = [
     medium: "Cotton on monks cloth",
     dimensions: "24in × 30in",
     description: ["Figures cloaked in devotion. The witness is not passive — to witness is to testify, to carry the weight of what has been seen. A study in presence, patience, and the sacred act of bearing witness."],
-    images: ["artwork/silent-witness.jpg"],
+    images: ["artwork/silent-witness.png"],
     type: "original",
     available: false,
     tags: ["textile", "figures", "faith"]
@@ -1660,7 +1666,7 @@ const artworks = [
     medium: "Fine art archival print",
     dimensions: "Various",
     description: ["Archival giclée print on 300gsm heavyweight cotton rag. Each print is signed and numbered in an edition of 50."],
-    images: ["artwork/crown-print.jpg"],
+    images: ["artwork/crown-print.png"],
     type: "print",
     available: true,
     printSizes: [
@@ -2177,6 +2183,10 @@ updateCartCount();
 
 <!-- iOS Top Bar -->
 <div id="ios-topbar">
+  <button id="ios-back-btn" onclick="iosNav('home')" aria-label="Back to Gallery">
+    <svg width="9" height="15" viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 1 1 7.5 8 14"/></svg>
+    Gallery
+  </button>
   <a class="ios-brand-top" onclick="iosNav('home');return false">Lizard King Textiles</a>
 </div>
 
@@ -2249,6 +2259,25 @@ updateCartCount();
   text-decoration: none;
   line-height: 1;
 }
+
+#ios-back-btn {
+  display: none;
+  position: absolute;
+  left: 16px;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  padding: 8px 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+#ios-back-btn:active { color: var(--red); }
 
 /* ── iOS Gallery Screen ── */
 #ios-gallery-screen {
@@ -2363,14 +2392,16 @@ updateCartCount();
 /* Woman figure slides up from bottom */
 #ios-menu-woman {
   position: absolute;
-  right: -6%;
+  right: 0;
   bottom: 0;
-  height: 90%;
-  width: auto;
+  height: 92%;
+  width: 58%;
+  object-fit: cover;
+  object-position: top center;
   pointer-events: none;
   z-index: 1;
   opacity: 0;
-  transform: translateY(50%);
+  transform: translateY(35%);
   transition: opacity 0.5s ease 0.05s, transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.05s;
 }
 #ios-menu-overlay.open #ios-menu-woman {
@@ -2382,12 +2413,13 @@ updateCartCount();
 #ios-menu-nav {
   position: absolute;
   left: 0; top: 0; bottom: 0;
-  width: 65%;
+  width: 55%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 32px 60px;
-  z-index: 2;
+  padding: 0 28px 60px;
+  z-index: 3;
+  background: linear-gradient(to right, rgba(0,0,0,0.45) 75%, transparent 100%);
 }
 
 .ios-nav-link {
@@ -2433,6 +2465,8 @@ updateCartCount();
   function setIOSGallery(onHome) {
     const screen = document.getElementById('ios-gallery-screen');
     if (screen) screen.style.display = onHome ? 'block' : 'none';
+    const back = document.getElementById('ios-back-btn');
+    if (back) back.style.display = onHome ? 'none' : 'flex';
   }
 
   /* Patch showPage so gallery syncs on every navigation */
