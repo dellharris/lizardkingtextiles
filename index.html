@@ -954,6 +954,12 @@
   }
   .placeholder-art svg { opacity: 0.25; }
 </style>
+<script>
+if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+  document.documentElement.classList.add('ios-mode');
+}
+</script>
 </head>
 <body>
 
@@ -1613,7 +1619,7 @@ const artworks = [
       "This piece is a reflection on protection, autonomy, and respect for the natural world. A reminder that wild beings are not ours to take, tame, or relocate — they are meant to exist on their own terms.",
       "This is a call to respect the natural world and to let it remain as it was meant to be."
     ],
-    images: ["artwork/guardian-of-the-gates.jpg", "artwork/guardian-of-the-gates-detail.jpg"],
+    images: ["artwork/guardian-of-the-gates.png", "artwork/guardian-of-the-gates-detail.jpg"],
     type: "original",
     available: true,
     tags: ["textile", "tiger", "nature", "swans", "floral", "protection"]
@@ -2163,6 +2169,296 @@ document.querySelectorAll('[id^="footer-"]').forEach(el => {
 renderGallery();
 renderShop();
 updateCartCount();
+</script>
+
+<!-- ═══════════════════════════════════════════════
+     iOS MOBILE UI
+═══════════════════════════════════════════════ -->
+
+<!-- iOS Top Bar -->
+<div id="ios-topbar">
+  <a class="ios-brand-top" onclick="iosNav('home');return false">Lizard King Textiles</a>
+</div>
+
+<!-- iOS Full-Screen Gallery -->
+<div id="ios-gallery-screen">
+  <div id="ios-track"></div>
+</div>
+
+<!-- iOS Hamburger Button -->
+<button id="ios-hamburger" onclick="toggleIOSMenu()" aria-label="Menu">
+  <svg width="22" height="15" viewBox="0 0 22 15" fill="none">
+    <rect width="22" height="2.5" rx="1.25" fill="#B91C1C"/>
+    <rect y="6.25" width="22" height="2.5" rx="1.25" fill="#B91C1C"/>
+    <rect y="12.5" width="22" height="2.5" rx="1.25" fill="#B91C1C"/>
+  </svg>
+</button>
+
+<!-- iOS Menu Overlay -->
+<div id="ios-menu-overlay" onclick="iosMenuTapOut(event)">
+  <img src="artwork/viewer-woman.png" id="ios-menu-woman" alt="">
+  <nav id="ios-menu-nav">
+    <a class="ios-nav-link" onclick="iosNav('home')">Gallery</a>
+    <a class="ios-nav-link" onclick="iosNav('shop')">Shop</a>
+    <a class="ios-nav-link" onclick="iosNav('about')">About</a>
+    <a class="ios-nav-link" onclick="iosNav('contact')">Contact</a>
+  </nav>
+</div>
+
+<style>
+/* ═══════════════════════════════════════════════
+   iOS MOBILE LAYOUT — active when <html> has .ios-mode
+═══════════════════════════════════════════════ */
+
+/* Hide desktop chrome */
+.ios-mode nav,
+.ios-mode #frame,
+.ios-mode #top-cross,
+.ios-mode #bottom-ornament { display: none !important; }
+
+/* Regular home page is replaced by #ios-gallery-screen */
+.ios-mode #page-home { display: none !important; }
+
+/* Non-home pages: account for iOS topbar + hamburger */
+.ios-mode .page:not(#page-home) {
+  padding-top: 64px !important;
+  padding-bottom: 100px !important;
+}
+
+/* ── iOS Top Bar ── */
+#ios-topbar {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 56px;
+  z-index: 150;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(17,17,17,0.09);
+}
+.ios-mode #ios-topbar { display: flex; }
+
+.ios-brand-top {
+  font-family: var(--gothic);
+  font-size: 1.8rem;
+  color: var(--ink);
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1;
+}
+
+/* ── iOS Gallery Screen ── */
+#ios-gallery-screen {
+  display: none;
+  position: fixed;
+  top: 56px;
+  left: 0; right: 0;
+  bottom: max(88px, calc(env(safe-area-inset-bottom) + 80px));
+  z-index: 10;
+  background: #0d0d0d;
+}
+
+#ios-track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+#ios-track::-webkit-scrollbar { display: none; }
+
+.ios-panel {
+  flex-shrink: 0;
+  width: 100vw;
+  height: 100%;
+  scroll-snap-align: start;
+  position: relative;
+  cursor: pointer;
+}
+.ios-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ios-panel .placeholder-art { position: absolute; inset: 0; }
+
+.ios-panel-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+  padding: 48px 20px 20px;
+  pointer-events: none;
+}
+.ios-panel-label h3 {
+  font-family: var(--gothic);
+  font-size: 1.7rem;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 5px;
+}
+.ios-panel-label p {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+}
+.ios-avail-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+/* ── iOS Hamburger ── */
+#ios-hamburger {
+  display: none;
+  position: fixed;
+  bottom: max(22px, calc(env(safe-area-inset-bottom) + 14px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 502;
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.12);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+#ios-hamburger:active {
+  transform: translateX(-50%) scale(0.93);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+}
+.ios-mode #ios-hamburger { display: flex; }
+
+/* ── iOS Menu Overlay ── */
+#ios-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 700;
+  background: rgba(8,8,8,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  overflow: hidden;
+}
+#ios-menu-overlay.open { display: block; }
+
+/* Woman figure slides in from right */
+#ios-menu-woman {
+  position: absolute;
+  right: -6%;
+  bottom: 0;
+  height: 90%;
+  width: auto;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.45s ease 0.1s, transform 0.45s ease 0.1s;
+}
+#ios-menu-overlay.open #ios-menu-woman {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Nav links */
+#ios-menu-nav {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 62%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 32px 80px;
+}
+
+.ios-nav-link {
+  display: block;
+  font-family: var(--gothic);
+  font-size: 2.8rem;
+  line-height: 1.1;
+  color: rgba(255,255,255,0.9);
+  cursor: pointer;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  transition: color 0.18s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ios-nav-link:last-child { border-bottom: none; }
+.ios-nav-link:active { color: var(--red); }
+</style>
+
+<script>
+(function () {
+  if (!document.documentElement.classList.contains('ios-mode')) return;
+
+  /* Build full-screen gallery panels */
+  function renderIOSGallery() {
+    const track = document.getElementById('ios-track');
+    if (!track) return;
+    track.innerHTML = artworks.map(art => `
+      <div class="ios-panel" onclick="openWork('${art.slug}')">
+        ${imgOrPlaceholder(art.images[0], art.title)}
+        <div class="ios-panel-label">
+          <h3>${art.title}</h3>
+          <p>
+            <span class="ios-avail-dot" style="background:${art.available ? 'var(--red)' : 'var(--muted)'}"></span>
+            ${art.available ? 'Available' : 'Sold'} &middot; ${art.medium}
+          </p>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  /* Show/hide the gallery screen based on active page */
+  function setIOSGallery(onHome) {
+    const screen = document.getElementById('ios-gallery-screen');
+    if (screen) screen.style.display = onHome ? 'block' : 'none';
+  }
+
+  /* Patch showPage so gallery syncs on every navigation */
+  const _origShow = window.showPage;
+  window.showPage = function (name) {
+    _origShow(name);
+    setIOSGallery(name === 'home');
+  };
+
+  /* Menu controls */
+  window.toggleIOSMenu = function () {
+    const ov = document.getElementById('ios-menu-overlay');
+    const opening = !ov.classList.contains('open');
+    ov.classList.toggle('open', opening);
+    document.body.style.overflow = opening ? 'hidden' : '';
+  };
+
+  window.closeIOSMenu = function () {
+    document.getElementById('ios-menu-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.iosNav = function (page) {
+    closeIOSMenu();
+    showPage(page);
+  };
+
+  window.iosMenuTapOut = function (e) {
+    if (e.target === document.getElementById('ios-menu-overlay')) closeIOSMenu();
+  };
+
+  /* Init */
+  renderIOSGallery();
+  setIOSGallery(true); /* home is active on load */
+})();
 </script>
 </body>
 </html>
