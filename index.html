@@ -264,6 +264,32 @@
   }
   @keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:0.7} }
 
+  /* ── Swipe bracket arrow ── */
+  .gallery-swipe-hint {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    pointer-events: none;
+    animation: bracketDrift 1.6s ease-in-out infinite;
+  }
+  .swipe-bracket {
+    font-size: 5rem;
+    line-height: 1;
+    color: #ffffff;
+    font-family: var(--display);
+    font-weight: 300;
+    text-shadow:
+      0 2px 12px rgba(0,0,0,0.55),
+      0 0 30px rgba(0,0,0,0.3);
+    user-select: none;
+  }
+  @keyframes bracketDrift {
+    0%,100% { transform: translateY(-50%) translateX(0);   opacity: 0.9; }
+    50%      { transform: translateY(-50%) translateX(-9px); opacity: 0.55; }
+  }
+
   /* ── GALLERY VIEWER (woman looking at art) ── */
   #gallery-viewer {
     position: absolute;
@@ -1369,6 +1395,9 @@
     <div class="gallery-track" id="gallery-track"></div>
     <!-- Woman viewer — appears to look at artwork while scrolling -->
     <img src="artwork/viewer-woman.png" id="gallery-viewer" alt="" />
+    <div class="gallery-swipe-hint">
+      <div class="swipe-bracket">&#8249;</div>
+    </div>
     <div class="gallery-hint">← drag to explore →</div>
   </div>
 </div>
