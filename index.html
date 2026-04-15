@@ -267,16 +267,14 @@
   /* ── GALLERY VIEWER (woman looking at art) ── */
   #gallery-viewer {
     position: absolute;
-    right: 4vw;
-    bottom: 0;
-    height: 88%;
+    right: 2vw;
+    bottom: -8%;          /* slightly lower — more grounded in the room */
+    height: 92%;
     width: auto;
-    z-index: 8;
+    z-index: 50;          /* above all gallery elements */
     pointer-events: none;
-    /* multiply blends white background away into the room's cream walls */
-    mix-blend-mode: multiply;
-    opacity: 0.96;
-    /* subtle entrance */
+    mix-blend-mode: normal;
+    opacity: 1;
     animation: viewerFloat 6s ease-in-out infinite;
   }
   @keyframes viewerFloat {
