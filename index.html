@@ -11,12 +11,12 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --cream:      #ffffff;
-    --ink:        #0D0D0D;
+    --cream:      #0D0D0D;
+    --ink:        #FDFAF4;
     --red:        #B91C1C;
-    --gold:       #B8860B;
-    --muted:      #555555;
-    --border:     #111111;
+    --gold:       #C8A020;
+    --muted:      #999999;
+    --border:     #FDFAF4;
     --gothic:     'UnifrakturMaguntia', serif;
     --display:    'Cinzel', serif;
     --body:       'Crimson Text', Georgia, serif;
@@ -26,10 +26,10 @@
   html { scroll-behavior: smooth; }
 
   body {
-    background-color: #ffffff;
+    background-color: #0D0D0D;
     background-image:
-      linear-gradient(to right,  #c4c4c4 2px, transparent 2px),
-      linear-gradient(to bottom, #c4c4c4 2px, transparent 2px);
+      linear-gradient(to right,  #1e1e1e 2px, transparent 2px),
+      linear-gradient(to bottom, #1e1e1e 2px, transparent 2px);
     background-size: 82px 82px;
     background-attachment: fixed;
     color: var(--ink);
@@ -44,10 +44,10 @@
   #frame {
     position: fixed;
     inset: 8px;
-    border: 5px solid #111111;
+    border: 5px solid #FDFAF4;
     box-shadow:
-      inset 0 0 0 5px #ffffff,
-      inset 0 0 0 8px #111111;
+      inset 0 0 0 5px #0D0D0D,
+      inset 0 0 0 8px #FDFAF4;
     pointer-events: none;
     z-index: 999;
   }
@@ -71,7 +71,7 @@
     transform: translateX(-50%);
     z-index: 1002;
     pointer-events: none;
-    background: #ffffff;
+    background: #0D0D0D;
     padding: 0 18px;
     display: flex;
     align-items: center;
@@ -80,13 +80,13 @@
   }
   #bottom-ornament .star {
     font-size: 14px;
-    color: #111111;
+    color: #FDFAF4;
     line-height: 1;
   }
   #bottom-ornament .dot {
     width: 5px; height: 5px;
     border-radius: 50%;
-    background: #111111;
+    background: #FDFAF4;
     flex-shrink: 0;
   }
 
@@ -99,9 +99,9 @@
     align-items: center;
     justify-content: space-between;
     padding: 18px 28px;
-    background: rgba(255,255,255,0.94);
+    background: rgba(13,13,13,0.94);
     backdrop-filter: blur(6px);
-    border-bottom: 1px solid rgba(17,17,17,0.08);
+    border-bottom: 1px solid rgba(253,250,244,0.08);
   }
   .nav-brand {
     font-family: var(--gothic);
@@ -216,7 +216,7 @@
     width: 100%; height: 100%;
     object-fit: cover;
     display: block;
-    background: #e8e4dc;
+    background: #1a1815;
   }
   .gallery-panel-label {
     position: absolute;
@@ -242,7 +242,6 @@
     color: var(--muted);
     white-space: nowrap;
   }
-  .gallery-hint {
     position: absolute;
     bottom: 14px;
     left: 50%;
@@ -310,7 +309,7 @@
     position: fixed;
     inset: 0;
     z-index: 200;
-    background: rgba(253,250,244,0.88);
+    background: rgba(13,13,13,0.92);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     align-items: center;
@@ -335,7 +334,7 @@
   @keyframes lb-in { from{opacity:0;transform:scale(0.88)} to{opacity:1;transform:scale(1)} }
   .lightbox-img-wrap {
     border: none;
-    background: #e8e4dc;
+    background: #1a1815;
     border-radius: 2px;
     overflow: hidden;
     box-shadow:
@@ -351,8 +350,8 @@
   }
   .lightbox-info {
     border: none;
-    border-top: 1px solid rgba(17,17,17,0.08);
-    background: #ffffff;
+    border-top: 1px solid rgba(253,250,244,0.1);
+    background: #0D0D0D;
     padding: 16px 20px;
     border-radius: 0 0 2px 2px;
   }
@@ -426,7 +425,7 @@
     gap: 12px;
     margin: 24px 0;
   }
-  .ornament-line { flex: 1; height: 1px; background: rgba(17,17,17,0.15); }
+  .ornament-line { flex: 1; height: 1px; background: rgba(253,250,244,0.15); }
   .ornament-icon { flex-shrink: 0; color: var(--ink); }
 
   .filter-bar {
@@ -449,7 +448,7 @@
     transition: all 0.15s;
   }
   .filter-pill.active { background: var(--ink); color: var(--cream); }
-  .filter-pill:hover:not(.active) { background: rgba(17,17,17,0.06); }
+  .filter-pill:hover:not(.active) { background: rgba(253,250,244,0.08); }
 
   .shop-grid {
     display: grid;
@@ -460,7 +459,7 @@
   .artwork-card-img {
     border: none;
     overflow: hidden;
-    background: #e8e4dc;
+    background: #1a1815;
     position: relative;
     padding-bottom: 120%;
     border-radius: 2px;
@@ -545,7 +544,7 @@
   .work-main-img {
     border: none;
     overflow: hidden;
-    background: #e8e4dc;
+    background: #1a1815;
     padding-bottom: 110%;
     position: relative;
     border-radius: 2px;
@@ -566,10 +565,10 @@
     margin-top: 12px;
   }
   .work-thumb {
-    border: 2px solid rgba(17,17,17,0.2);
+    border: 2px solid rgba(253,250,244,0.2);
     overflow: hidden;
     flex: 1;
-    background: #e8e4dc;
+    background: #1a1815;
     padding-bottom: 80%;
     position: relative;
     cursor: pointer;
@@ -675,7 +674,7 @@
   .btn.outline {
     background: transparent;
     color: var(--ink);
-    border-color: rgba(17,17,17,0.3);
+    border-color: rgba(253,250,244,0.3);
   }
   .btn.outline:hover { border-color: var(--ink); background: transparent; color: var(--ink); }
   .btn:disabled { opacity: 0.5; cursor: default; }
@@ -702,7 +701,7 @@
     position: fixed;
     top: 0; right: -420px; bottom: 0;
     width: 100%; max-width: 400px;
-    background: #ffffff;
+    background: #0D0D0D;
     border-left: 3px solid var(--ink);
     z-index: 301;
     display: flex;
@@ -735,14 +734,14 @@
     display: flex;
     gap: 14px;
     padding: 18px 0;
-    border-bottom: 1px solid rgba(17,17,17,0.08);
+    border-bottom: 1px solid rgba(253,250,244,0.08);
   }
   .cart-item-img {
     width: 64px; height: 80px;
     flex-shrink: 0;
-    border: 1px solid rgba(17,17,17,0.2);
+    border: 1px solid rgba(253,250,244,0.2);
     overflow: hidden;
-    background: #e8e4dc;
+    background: #1a1815;
     position: relative;
   }
   .cart-item-img img {
@@ -775,7 +774,7 @@
   }
   .qty-ctrl {
     display: flex;
-    border: 1px solid rgba(17,17,17,0.25);
+    border: 1px solid rgba(253,250,244,0.25);
   }
   .qty-ctrl button {
     padding: 2px 9px;
@@ -786,11 +785,11 @@
     line-height: 1;
     transition: background 0.15s;
   }
-  .qty-ctrl button:hover { background: rgba(17,17,17,0.06); }
+  .qty-ctrl button:hover { background: rgba(253,250,244,0.08); }
   .qty-ctrl span {
     padding: 2px 10px;
-    border-left: 1px solid rgba(17,17,17,0.25);
-    border-right: 1px solid rgba(17,17,17,0.25);
+    border-left: 1px solid rgba(253,250,244,0.25);
+    border-right: 1px solid rgba(253,250,244,0.25);
     font-size: 13px;
     display: flex; align-items: center;
   }
@@ -842,7 +841,7 @@
   }
   #inquiry-overlay.open { display: flex; }
   .inquiry-box {
-    background: #ffffff;
+    background: #0D0D0D;
     border: 3px solid var(--ink);
     width: 100%; max-width: 500px;
     animation: lb-in 0.25s ease-out;
@@ -876,7 +875,7 @@
   }
   .form-input {
     width: 100%;
-    border: 1.5px solid rgba(17,17,17,0.3);
+    border: 1.5px solid rgba(253,250,244,0.3);
     background: transparent;
     padding: 11px 14px;
     font-family: var(--mono);
@@ -941,7 +940,7 @@
   /* ── PLACEHOLDER ARTWORK IMAGE ── */
   .placeholder-art {
     width: 100%; height: 100%;
-    background: linear-gradient(135deg, #e0dbd0 0%, #ccc5b5 100%);
+    background: linear-gradient(135deg, #1a1815 0%, #2a2520 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2201,6 +2200,7 @@ updateCartCount();
 <!-- iOS Menu Overlay -->
 <div id="ios-menu-overlay" onclick="iosMenuTapOut(event)">
   <nav id="ios-menu-nav">
+    <a class="ios-nav-link ios-nav-feed" onclick="iosOpenFeed()">Artist Feed</a>
     <a class="ios-nav-link" onclick="iosNav('home')">Gallery</a>
     <a class="ios-nav-link" onclick="iosNav('shop')">Shop</a>
     <a class="ios-nav-link" onclick="iosNav('about')">About</a>
@@ -2235,12 +2235,12 @@ updateCartCount();
   top: 0; left: 0; right: 0;
   height: 56px;
   z-index: 150;
-  background: rgba(255,255,255,0.96);
+  background: rgba(13,13,13,0.96);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid rgba(17,17,17,0.09);
+  border-bottom: 1px solid rgba(253,250,244,0.09);
 }
 .ios-mode #ios-topbar { display: flex; }
 
@@ -2353,8 +2353,8 @@ updateCartCount();
   z-index: 502;
   width: 58px; height: 58px;
   border-radius: 50%;
-  background: #ffffff;
-  border: none;
+  background: #0D0D0D;
+  border: 1.5px solid rgba(253,250,244,0.3);
   box-shadow: 0 4px 20px rgba(0,0,0,0.22), 0 1px 4px rgba(0,0,0,0.12);
   cursor: pointer;
   align-items: center;
@@ -2493,6 +2493,373 @@ updateCartCount();
   /* Init */
   renderIOSGallery();
   setIOSGallery(true); /* home is active on load */
+})();
+</script>
+<!-- ═══════════════════════════════════════════════
+     ARTIST FEED — desktop floating button + slide-in panel
+═══════════════════════════════════════════════ -->
+
+<!-- Desktop floating feed button (left side) -->
+<button id="feed-float-btn" onclick="openFeed()" aria-label="Artist Feed">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4.5"/>
+    <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+  </svg>
+  <span>Feed</span>
+</button>
+
+<!-- Feed overlay backdrop -->
+<div id="feed-overlay" onclick="feedTapOut(event)">
+
+  <!-- Feed panel — slides in from left -->
+  <div id="feed-panel">
+
+    <!-- Header -->
+    <div id="feed-header">
+      <div class="feed-profile">
+        <div class="feed-avatar-wrap">
+          <img src="artwork/portal-crest.png" class="feed-avatar" alt="Lizard King Textiles">
+        </div>
+        <div class="feed-profile-text">
+          <p class="feed-handle">@lizardkingtextiles</p>
+          <p class="feed-sub">Textile Art &middot; Handmade</p>
+        </div>
+      </div>
+      <div class="feed-header-actions">
+        <a href="https://instagram.com/lizardkingtextiles" target="_blank" rel="noopener noreferrer" class="feed-follow-btn">Follow on IG</a>
+        <button class="feed-close-btn" onclick="closeFeed()" aria-label="Close feed">
+          <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Posts grid -->
+    <div id="feed-posts"></div>
+
+    <!-- Footer CTA -->
+    <div id="feed-footer">
+      <a href="https://instagram.com/lizardkingtextiles" target="_blank" rel="noopener noreferrer" class="feed-ig-cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4.5"/>
+          <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+        </svg>
+        View Full Feed on Instagram
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* ─── Desktop floating feed button ─── */
+#feed-float-btn {
+  display: none;
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 490;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: #0D0D0D;
+  border: 1.5px solid rgba(253,250,244,0.25);
+  color: #FDFAF4;
+  cursor: pointer;
+  padding: 14px 10px;
+  border-radius: 30px;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+#feed-float-btn span {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+#feed-float-btn:hover {
+  border-color: rgba(253,250,244,0.6);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.6);
+}
+#feed-float-btn:active { transform: translateY(-50%) scale(0.95); }
+
+/* Show on desktop, hide on iOS */
+.ios-mode #feed-float-btn { display: none !important; }
+
+/* Show on desktop (non-iOS) — also controlled by JS below */
+#feed-float-btn { display: none; } /* JS sets to flex on non-iOS */
+
+/* ─── Feed overlay backdrop ─── */
+#feed-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+#feed-overlay.open { display: block; }
+
+/* ─── Feed panel ─── */
+#feed-panel {
+  position: absolute;
+  top: 0;
+  left: -420px;
+  bottom: 0;
+  width: 100%;
+  max-width: 400px;
+  background: #111111;
+  border-right: 1.5px solid rgba(253,250,244,0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: left 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+#feed-overlay.open #feed-panel { left: 0; }
+
+/* ─── Feed header ─── */
+#feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 16px;
+  border-bottom: 1px solid rgba(253,250,244,0.1);
+  flex-shrink: 0;
+  gap: 10px;
+}
+.feed-profile {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  flex: 1;
+  min-width: 0;
+}
+.feed-avatar-wrap {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(253,250,244,0.3);
+  background: #1a1815;
+}
+.feed-avatar {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(20%);
+}
+.feed-profile-text { min-width: 0; }
+.feed-handle {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #FDFAF4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.feed-sub {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #999999;
+  margin-top: 2px;
+}
+.feed-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.feed-follow-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #FDFAF4;
+  border: 1px solid rgba(253,250,244,0.35);
+  padding: 6px 10px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+.feed-follow-btn:hover { border-color: #FDFAF4; background: rgba(253,250,244,0.06); }
+.feed-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999999;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.feed-close-btn:hover { color: #FDFAF4; }
+
+/* ─── Feed posts grid ─── */
+#feed-posts {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(253,250,244,0.15) transparent;
+  align-content: start;
+}
+#feed-posts::-webkit-scrollbar { width: 4px; }
+#feed-posts::-webkit-scrollbar-track { background: transparent; }
+#feed-posts::-webkit-scrollbar-thumb { background: rgba(253,250,244,0.15); border-radius: 2px; }
+
+.feed-post {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  cursor: pointer;
+  background: #1a1815;
+}
+.feed-post img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.feed-post:hover img { transform: scale(1.05); }
+.feed-post-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  display: flex;
+  align-items: flex-end;
+  padding: 10px 8px;
+}
+.feed-post:hover .feed-post-overlay { opacity: 1; }
+.feed-post-title {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 0.85rem;
+  color: #FDFAF4;
+  line-height: 1.1;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8);
+}
+.feed-avail-dot {
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px rgba(0,0,0,0.4);
+}
+
+/* ─── Feed footer ─── */
+#feed-footer {
+  padding: 16px;
+  border-top: 1px solid rgba(253,250,244,0.1);
+  flex-shrink: 0;
+}
+.feed-ig-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #FDFAF4;
+  text-decoration: none;
+  border: 1px solid rgba(253,250,244,0.2);
+  padding: 12px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.feed-ig-cta:hover { border-color: rgba(253,250,244,0.5); background: rgba(253,250,244,0.04); }
+
+/* ─── iOS: make feed-float-btn never show, but feed panel works ─── */
+.ios-mode #feed-float-btn { display: none !important; }
+/* iOS feed opens full-width (override) */
+.ios-mode #feed-panel {
+  max-width: 100%;
+  border-right: none;
+}
+
+/* ─── Artist Feed nav link styling ─── */
+.ios-nav-feed {
+  color: #B91C1C !important;
+}
+</style>
+
+<script>
+/* ─── Artist Feed ─── */
+(function () {
+
+  /* Render posts from artworks array */
+  function renderFeed() {
+    const container = document.getElementById('feed-posts');
+    if (!container || typeof artworks === 'undefined') return;
+    container.innerHTML = artworks.map(art => {
+      const img = art.images && art.images[0] ? art.images[0] : null;
+      const dot = art.available ? '#B91C1C' : '#666666';
+      const imgTag = img
+        ? `<img src="${img}" alt="${art.title}" loading="lazy">`
+        : `<div class="placeholder-art"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FDFAF4" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9l4-4 5 5 4-4 5 5"/></svg></div>`;
+      return `
+        <div class="feed-post" onclick="openWork('${art.slug}'); closeFeed();">
+          ${imgTag}
+          <span class="feed-avail-dot" style="background:${dot}"></span>
+          <div class="feed-post-overlay">
+            <p class="feed-post-title">${art.title}</p>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  /* Open / close */
+  window.openFeed = function () {
+    const ov = document.getElementById('feed-overlay');
+    if (!ov) return;
+    renderFeed();
+    ov.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeFeed = function () {
+    const ov = document.getElementById('feed-overlay');
+    if (!ov) return;
+    ov.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  window.feedTapOut = function (e) {
+    if (e.target === document.getElementById('feed-overlay')) closeFeed();
+  };
+
+  /* iOS menu: "Artist Feed" taps close menu then open feed */
+  window.iosOpenFeed = function () {
+    if (typeof closeIOSMenu === 'function') closeIOSMenu();
+    else {
+      const ov = document.getElementById('ios-menu-overlay');
+      if (ov) ov.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    openFeed();
+  };
+
+  /* Show desktop float button (non-iOS only) */
+  const isIOS = document.documentElement.classList.contains('ios-mode');
+  const floatBtn = document.getElementById('feed-float-btn');
+  if (floatBtn && !isIOS) floatBtn.style.display = 'flex';
 })();
 </script>
 </body>
