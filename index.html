@@ -2597,21 +2597,29 @@ updateCartCount();
 
 /* ─── Feed overlay backdrop ─── */
 #feed-overlay {
-  display: none;
   position: fixed;
   inset: 0;
-  z-index: 600;
-  background: rgba(0,0,0,0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  z-index: 800;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  -webkit-transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
-#feed-overlay.open { display: block; }
+#feed-overlay.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
 
 /* ─── Feed panel ─── */
 #feed-panel {
   position: absolute;
   top: 0;
-  left: -420px;
+  left: 0;
   bottom: 0;
   width: 100%;
   max-width: 400px;
@@ -2620,9 +2628,16 @@ updateCartCount();
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: left 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  -webkit-transition: -webkit-transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+  transition: transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+  will-change: transform;
 }
-#feed-overlay.open #feed-panel { left: 0; }
+#feed-overlay.open #feed-panel {
+  -webkit-transform: translateX(0);
+  transform: translateX(0);
+}
 
 /* ─── Feed header ─── */
 #feed-header {
@@ -2706,18 +2721,15 @@ updateCartCount();
 }
 .feed-close-btn:hover { color: #FDFAF4; }
 
-/* ─── Feed posts grid ─── */
+/* ─── Feed posts area ─── */
 #feed-posts {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-  padding: 2px;
   scrollbar-width: thin;
   scrollbar-color: rgba(253,250,244,0.15) transparent;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
 }
 #feed-posts::-webkit-scrollbar { width: 4px; }
 #feed-posts::-webkit-scrollbar-track { background: transparent; }
@@ -2788,7 +2800,7 @@ updateCartCount();
 
 /* ─── iOS: make feed-float-btn never show, but feed panel works ─── */
 .ios-mode #feed-float-btn { display: none !important; }
-/* iOS feed opens full-width (override) */
+/* iOS feed opens full-width */
 .ios-mode #feed-panel {
   max-width: 100%;
   border-right: none;
@@ -2798,44 +2810,124 @@ updateCartCount();
 .ios-nav-feed {
   color: #B91C1C !important;
 }
+
+/* ─── Feed fallback / IG placeholder ─── */
+.feed-ig-placeholder {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  min-height: 300px;
+}
+.fig-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  padding: 2px;
+}
+.fig-thumb {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #1a1815;
+}
+.fig-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.45) blur(1px);
+}
+.fig-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.fig-handle {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: #FDFAF4;
+}
+.fig-open-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #FDFAF4;
+  text-decoration: none;
+  border: 1px solid rgba(253,250,244,0.5);
+  padding: 10px 20px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.fig-open-btn:hover { background: rgba(253,250,244,0.1); border-color: #FDFAF4; }
 </style>
 
 <script>
 /* ─── Artist Feed ─── */
 (function () {
 
-  /* Render posts from artworks array */
+  var feedReady = false;
+
   function renderFeed() {
-    const container = document.getElementById('feed-posts');
-    if (!container || typeof artworks === 'undefined') return;
-    container.innerHTML = artworks.map(art => {
-      const img = art.images && art.images[0] ? art.images[0] : null;
-      const dot = art.available ? '#B91C1C' : '#666666';
-      const imgTag = img
-        ? `<img src="${img}" alt="${art.title}" loading="lazy">`
-        : `<div class="placeholder-art"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FDFAF4" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9l4-4 5 5 4-4 5 5"/></svg></div>`;
-      return `
-        <div class="feed-post" onclick="openWork('${art.slug}'); closeFeed();">
-          ${imgTag}
-          <span class="feed-avail-dot" style="background:${dot}"></span>
-          <div class="feed-post-overlay">
-            <p class="feed-post-title">${art.title}</p>
-          </div>
-        </div>`;
-    }).join('');
+    if (feedReady) return;
+    feedReady = true;
+    var container = document.getElementById('feed-posts');
+    if (!container) return;
+    /* Behold.so widget — set BEHOLD_FEED_ID once you connect @lizardkingatl at behold.so */
+    var BEHOLD_ID = '';   /* ← paste your Behold feed ID here, e.g. 'lXe7YQPnqz' */
+
+    if (BEHOLD_ID) {
+      container.innerHTML =
+        '<div style="padding:0" data-behold-id="' + BEHOLD_ID + '"></div>';
+      /* Dynamically load the Behold widget script */
+      if (!document.getElementById('behold-script')) {
+        var s = document.createElement('script');
+        s.id = 'behold-script';
+        s.type = 'module';
+        s.src = 'https://w.behold.so/widget.js';
+        document.head.appendChild(s);
+      }
+    } else {
+      /* Fallback: styled direct-to-Instagram panel */
+      container.innerHTML =
+        '<div class="feed-ig-placeholder">' +
+          '<div class="fig-grid">' +
+            (typeof artworks !== 'undefined' ? artworks.map(function(art){
+              var img = art.images && art.images[0] ? art.images[0] : null;
+              return '<div class="fig-thumb">' +
+                (img ? '<img src="' + img + '" alt="' + art.title + '" loading="lazy">' : '') +
+                '</div>';
+            }).join('') : '') +
+          '</div>' +
+          '<div class="fig-overlay">' +
+            '<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#FDFAF4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4.5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#FDFAF4" stroke="none"/></svg>' +
+            '<p class="fig-handle">@lizardkingatl</p>' +
+            '<a href="https://www.instagram.com/lizardkingatl/" target="_blank" rel="noopener noreferrer" class="fig-open-btn">View on Instagram</a>' +
+          '</div>' +
+        '</div>';
+    }
   }
 
-  /* Open / close */
+  /* ── Open ── */
   window.openFeed = function () {
-    const ov = document.getElementById('feed-overlay');
+    var ov = document.getElementById('feed-overlay');
     if (!ov) return;
     renderFeed();
-    ov.classList.add('open');
+    /* rAF ensures visibility transition fires on iOS Safari */
+    requestAnimationFrame(function () {
+      ov.classList.add('open');
+    });
     document.body.style.overflow = 'hidden';
   };
 
+  /* ── Close ── */
   window.closeFeed = function () {
-    const ov = document.getElementById('feed-overlay');
+    var ov = document.getElementById('feed-overlay');
     if (!ov) return;
     ov.classList.remove('open');
     document.body.style.overflow = '';
@@ -2845,20 +2937,25 @@ updateCartCount();
     if (e.target === document.getElementById('feed-overlay')) closeFeed();
   };
 
-  /* iOS menu: "Artist Feed" taps close menu then open feed */
+  /* ── iOS: called from hamburger menu "Artist Feed" ── */
   window.iosOpenFeed = function () {
-    if (typeof closeIOSMenu === 'function') closeIOSMenu();
-    else {
-      const ov = document.getElementById('ios-menu-overlay');
-      if (ov) ov.classList.remove('open');
-      document.body.style.overflow = '';
+    /* Hide the iOS menu overlay immediately */
+    var menuOv = document.getElementById('ios-menu-overlay');
+    if (menuOv) {
+      menuOv.classList.remove('open');
+      menuOv.style.display = 'none';
     }
-    openFeed();
+    document.body.style.overflow = '';
+    /* Small delay so iOS finishes hiding the menu before feed paints */
+    setTimeout(function () {
+      if (menuOv) menuOv.style.display = '';
+      openFeed();
+    }, 60);
   };
 
   /* Show desktop float button (non-iOS only) */
-  const isIOS = document.documentElement.classList.contains('ios-mode');
-  const floatBtn = document.getElementById('feed-float-btn');
+  var isIOS = document.documentElement.classList.contains('ios-mode');
+  var floatBtn = document.getElementById('feed-float-btn');
   if (floatBtn && !isIOS) floatBtn.style.display = 'flex';
 })();
 </script>
