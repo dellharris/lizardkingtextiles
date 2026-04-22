@@ -6,7 +6,7 @@
 <title>Lizard King Textiles</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=MedievalSharp&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=UnifrakturMaguntia&family=MedievalSharp&family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1001,8 +1001,8 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
       <div class="crystal-zone" id="crystal-bottom"></div>
     </div>
 
-    <p id="portal-hint">✦ rub a crystal to enter ✦</p>
-    <p id="portal-unlocking" style="display:none">✦ &nbsp; opening &nbsp; ✦</p>
+    <p id="portal-hint">◆ RUB CRYSTAL ◆</p>
+    <p id="portal-unlocking" style="display:none">ENTERING . . .</p>
   </div>
 
   <!-- Light blast on unlock -->
@@ -1015,145 +1015,148 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
   position: fixed; inset: 0; z-index: 5000;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-  transition: opacity 1s ease;
-  background: #0d0d0d;
+  transition: opacity 1.2s ease;
+  background: #060000;
 }
 #portal-screen.fade-out { opacity: 0; pointer-events: none; }
 
-/* ── Stone Wall ── */
+/* ── Wall halves ── */
 .wall-half {
   position: absolute;
   top: 0; width: 50%; height: 100%;
   overflow: hidden;
+  z-index: 2;
   transition: transform 1.8s cubic-bezier(0.86,0,0.07,1);
 }
 #wall-left  { left: 0;  transform-origin: left center; }
 #wall-right { right: 0; transform-origin: right center; }
 
+/* 8-bit chunky stone block texture */
 .stone-surface {
   position: absolute; inset: 0;
-  background-color: #1c1c1e;
+  background-color: #1e1004;
   background-image:
-    /* horizontal mortar lines */
     repeating-linear-gradient(180deg,
-      transparent 0px, transparent 59px,
-      #0a0a0a 59px, #0a0a0a 63px
+      transparent 0px, transparent 15px,
+      #0a0702 15px, #0a0702 17px
     ),
-    /* vertical mortar — row A */
     repeating-linear-gradient(90deg,
-      transparent 0px, transparent 79px,
-      #0a0a0a 79px, #0a0a0a 83px
+      transparent 0px, transparent 23px,
+      #0a0702 23px, #0a0702 25px
     );
-  /* subtle stone color variation via radial */
+  background-size: 48px 32px;
+  image-rendering: pixelated;
 }
-/* Offset every-other stone row with pseudo-element */
+/* Offset alternate brick rows */
 .wall-half::before {
   content: '';
   position: absolute; inset: 0;
   background-image:
     repeating-linear-gradient(90deg,
-      transparent 0px, transparent 79px,
-      #0a0a0a 79px, #0a0a0a 83px
+      transparent 0px, transparent 23px,
+      #0a0702 23px, #0a0702 25px
     );
-  background-size: 164px 126px;
-  background-position: 82px 63px;
-  opacity: 0.8;
+  background-size: 48px 32px;
+  background-position: 24px 16px;
   pointer-events: none;
 }
-/* Center-facing warm glow on each half */
+/* Fire-glow on inner faces */
 #wall-left .stone-surface {
   background-image:
-    radial-gradient(ellipse at 100% 50%, rgba(200,120,30,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse at 100% 50%, rgba(255,160,40,0.06) 0%, transparent 40%),
-    repeating-linear-gradient(180deg, transparent 0px, transparent 59px, #0a0a0a 59px, #0a0a0a 63px),
-    repeating-linear-gradient(90deg,  transparent 0px, transparent 79px, #0a0a0a 79px, #0a0a0a 83px),
-    linear-gradient(90deg, #0e0e10 0%, #1e1e22 60%, #161618 100%);
+    radial-gradient(ellipse at 100% 50%, rgba(220,60,0,0.30) 0%, rgba(160,20,0,0.14) 35%, transparent 60%),
+    repeating-linear-gradient(180deg, transparent 0px, transparent 15px, #0a0702 15px, #0a0702 17px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 23px, #0a0702 23px, #0a0702 25px);
+  background-color: #1e1004;
+  background-size: auto, 48px 32px, 48px 32px;
 }
 #wall-right .stone-surface {
   background-image:
-    radial-gradient(ellipse at 0% 50%, rgba(200,120,30,0.18) 0%, transparent 60%),
-    radial-gradient(ellipse at 0% 50%, rgba(255,160,40,0.06) 0%, transparent 40%),
-    repeating-linear-gradient(180deg, transparent 0px, transparent 59px, #0a0a0a 59px, #0a0a0a 63px),
-    repeating-linear-gradient(90deg,  transparent 0px, transparent 79px, #0a0a0a 79px, #0a0a0a 83px),
-    linear-gradient(90deg, #161618 0%, #1e1e22 40%, #0e0e10 100%);
+    radial-gradient(ellipse at 0% 50%, rgba(220,60,0,0.30) 0%, rgba(160,20,0,0.14) 35%, transparent 60%),
+    repeating-linear-gradient(180deg, transparent 0px, transparent 15px, #0a0702 15px, #0a0702 17px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent 23px, #0a0702 23px, #0a0702 25px);
+  background-color: #1e1004;
+  background-size: auto, 48px 32px, 48px 32px;
 }
 
 /* Opened wall state */
 #portal-screen.unlocked #wall-left  { transform: translateX(-100%); }
 #portal-screen.unlocked #wall-right { transform: translateX(100%);  }
 
-/* Center seam */
+/* Center seam — glowing red-orange fire crack */
 #wall-seam {
   position: absolute; top: 0; left: 50%;
-  width: 2px; height: 100%;
-  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg,
+    #ff4400 0%, #ff9900 15%, #ff4400 30%,
+    #cc2200 50%, #ff6600 70%, #ff4400 85%, #cc2200 100%
+  );
   transform: translateX(-50%);
   z-index: 6;
+  box-shadow: 0 0 18px rgba(255,80,0,0.8), 0 0 6px rgba(255,200,0,0.9);
 }
 
-/* ── Torches ── */
+/* ── 8-bit Torches ── */
 .torch {
-  position: absolute; top: 28%; width: 28px;
+  position: absolute; top: 26%; width: 22px;
   display: flex; flex-direction: column; align-items: center;
 }
-.torch-l { right: 14%; }
-.torch-r { left:  14%; }
+.torch-l { right: 13%; }
+.torch-r { left:  13%; }
 .torch-bracket {
-  width: 22px; height: 8px;
-  background: linear-gradient(90deg, #888,#ccc,#888);
-  border-radius: 2px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  width: 20px; height: 6px;
+  background: linear-gradient(180deg, #aaaaaa, #777777);
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #333;
 }
 .torch-stick {
-  width: 10px; height: 44px;
-  background: linear-gradient(180deg, #8B4513, #5C2E00);
-  border-radius: 3px;
-  box-shadow: inset 1px 0 2px rgba(255,200,100,0.2);
+  width: 8px; height: 36px;
+  background: linear-gradient(180deg, #7a3800, #3c1600);
+  border-radius: 0;
+  box-shadow: inset 1px 0 2px rgba(255,160,60,0.15);
 }
 .flame-wrap {
-  position: relative; width: 24px; height: 36px;
-  margin-bottom: -8px;
-  order: -1;
+  position: relative; width: 20px; height: 28px;
+  margin-bottom: -6px; order: -1;
 }
 .flame {
   position: absolute; bottom: 0;
-  border-radius: 50% 50% 30% 30%;
+  border-radius: 50% 50% 20% 20%;
   transform-origin: bottom center;
-  filter: blur(1.5px);
+  filter: blur(1px);
 }
 .fl1 {
-  width: 18px; height: 30px; left: 3px;
-  background: radial-gradient(ellipse at 50% 80%, #fff 0%, #ffdd44 30%, #ff8800 65%, transparent 100%);
+  width: 16px; height: 26px; left: 2px;
+  background: radial-gradient(ellipse at 50% 80%, #fff 0%, #ffdd44 30%, #ff6600 70%, transparent 100%);
   animation: flicker1 0.8s ease-in-out infinite alternate;
 }
 .fl2 {
-  width: 12px; height: 22px; left: 6px;
-  background: radial-gradient(ellipse at 50% 80%, #fff 0%, #ffee88 30%, #ff6600 70%, transparent 100%);
+  width: 10px; height: 18px; left: 5px;
+  background: radial-gradient(ellipse at 50% 80%, #fff 0%, #ffee88 30%, #ff4400 70%, transparent 100%);
   animation: flicker2 0.6s ease-in-out 0.1s infinite alternate;
 }
 .fl3 {
-  width: 7px; height: 16px; left: 8.5px;
+  width: 6px; height: 13px; left: 7px;
   background: radial-gradient(ellipse at 50% 80%, #fff 0%, #ffffff 40%, #ffee44 80%, transparent 100%);
   animation: flicker1 0.4s ease-in-out 0.2s infinite alternate;
 }
 @keyframes flicker1 {
-  from { transform: scaleX(1) skewX(0deg);   opacity: 0.95; }
-  to   { transform: scaleX(0.85) skewX(6deg); opacity: 1; }
+  from { transform: scaleX(1) skewX(0deg);    opacity: 0.95; }
+  to   { transform: scaleX(0.85) skewX(7deg); opacity: 1; }
 }
 @keyframes flicker2 {
   from { transform: scaleX(1) skewX(-4deg); opacity: 0.9; }
-  to   { transform: scaleX(1.1) skewX(3deg); opacity: 1; }
+  to   { transform: scaleX(1.12) skewX(3deg); opacity: 1; }
 }
 .torch-glow {
-  position: absolute; top: -20px; left: 50%;
-  width: 120px; height: 120px;
+  position: absolute; top: -16px; left: 50%;
+  width: 100px; height: 100px;
   transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,160,30,0.22) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,100,20,0.32) 0%, transparent 70%);
   animation: glowPulse 1.2s ease-in-out infinite alternate;
   pointer-events: none;
 }
-@keyframes glowPulse { from{opacity:0.7} to{opacity:1} }
+@keyframes glowPulse { from{opacity:0.6} to{opacity:1} }
 
 /* ── Portal Center ── */
 #portal-center {
@@ -1163,66 +1166,63 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
   transition: opacity 0.6s ease 0.8s;
 }
 #portal-screen.unlocked #portal-center { opacity: 0; }
-@keyframes centerFloat {
-  0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-8px); }
-}
 
-/* ── Crest image ── */
+/* ── Crest ── */
 #crest-image-wrap {
   position: relative;
-  width: min(700px, 90vw);
-  filter: drop-shadow(0 6px 28px rgba(30,60,200,0.45)) drop-shadow(0 2px 8px rgba(0,0,0,0.7));
+  width: min(600px, 88vw);
+  filter: drop-shadow(0 4px 22px rgba(255,80,0,0.5)) drop-shadow(0 2px 6px rgba(0,0,0,0.95));
   animation: centerFloat 5s ease-in-out infinite;
   transition: filter 0.3s;
 }
 #portal-crest-img {
   width: 100%; height: auto; display: block;
   pointer-events: none;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
-
-/* Invisible rub zones over each blue crystal */
+@keyframes centerFloat {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
 .crystal-zone {
   position: absolute;
   cursor: crosshair;
   border-radius: 50%;
 }
-/* Top teardrop gem */
-#crystal-top {
-  left: 43%; top: 5%;
-  width: 14%; padding-bottom: 20%;
-}
-/* Bottom round gem */
-#crystal-bottom {
-  left: 43%; top: 66%;
-  width: 14%; padding-bottom: 14%;
-}
-
-/* Rubbing state glow on the whole image */
+#crystal-top    { left: 43%; top: 5%;  width: 14%; padding-bottom: 20%; }
+#crystal-bottom { left: 43%; top: 66%; width: 14%; padding-bottom: 14%; }
 #crest-image-wrap.rubbing {
-  filter: drop-shadow(0 6px 28px rgba(30,60,200,0.45)) drop-shadow(0 0 24px rgba(80,160,255,0.85));
+  filter: drop-shadow(0 4px 22px rgba(255,120,0,0.8)) drop-shadow(0 0 30px rgba(255,200,0,0.6));
 }
 
-/* Hint text */
+/* ── 8-bit pixel hint text ── */
 #portal-hint {
-  font-family: 'Cinzel', serif;
-  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
-  color: rgba(180,200,255,0.5);
-  animation: hintFade 3s ease-in-out infinite;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,210,60,0.95);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.95), 0 0 12px rgba(255,120,0,0.6);
+  animation: hintBlink 1.1s step-end infinite;
   transition: opacity 0.4s;
-  margin-top: 14px;
+  margin-top: 22px;
 }
 #portal-hint.hidden { opacity: 0; }
-@keyframes hintFade { 0%,100%{opacity:0.3} 50%{opacity:0.75} }
+@keyframes hintBlink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 #portal-unlocking {
-  font-family: 'Cinzel', serif;
-  font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase;
-  color: rgba(120,190,255,0.95);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,230,80,1);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.95), 0 0 16px rgba(255,160,0,0.8);
   margin-top: 4px;
-  animation: unlockPulse 0.5s ease-in-out infinite;
+  animation: unlockBlink 0.35s step-end infinite;
 }
-@keyframes unlockPulse { 0%,100%{opacity:0.6} 50%{opacity:1} }
+@keyframes unlockBlink { 0%,100%{opacity:1} 50%{opacity:0} }
 
 /* Shake */
 #portal-center.shaking { animation: shake 0.55s ease-in-out; }
@@ -1235,15 +1235,239 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
   85%{transform:translateX(-2px)}
 }
 
-/* Light blast */
+/* Light blast — red-orange 8-bit flash */
 #portal-light {
   position: fixed; inset: 0;
-  background: radial-gradient(circle at 50% 50%, #ffffff 0%, #aaccff 30%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, #ffee88 0%, #ff8800 20%, #cc2200 50%, transparent 72%);
   opacity: 0; pointer-events: none; z-index: 5002;
-  transition: opacity 0.2s;
+  transition: opacity 0.18s;
 }
 #portal-light.blast { opacity: 1; }
 </style>
+
+<!-- 8-bit pixel sky canvas -->
+<script>
+(function() {
+  var ps = document.getElementById('portal-screen');
+  if (!ps) return;
+
+  /* ── canvas setup ── */
+  var SCALE = 4;
+  var cvs = document.createElement('canvas');
+  cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:1;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none';
+  ps.insertBefore(cvs, ps.firstChild);
+
+  var ctx = cvs.getContext('2d');
+  var W = 0, H = 0, LW = 0, LH = 0;   // CSS px and logical px sizes
+
+  function resize() {
+    W = ps.offsetWidth  || window.innerWidth;
+    H = ps.offsetHeight || window.innerHeight;
+    LW = Math.ceil(W / SCALE);
+    LH = Math.ceil(H / SCALE);
+    cvs.width  = LW;
+    cvs.height = LH;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* ── sky gradient bands ── */
+  // 12 rows of colour from top to near-bottom (logical pixels)
+  var SKY_BANDS = [
+    {stop:0.00, r:6,   g:0,   b:0  },
+    {stop:0.08, r:14,  g:0,   b:0  },
+    {stop:0.18, r:26,  g:2,   b:0  },
+    {stop:0.30, r:44,  g:4,   b:0  },
+    {stop:0.42, r:72,  g:8,   b:0  },
+    {stop:0.54, r:110, g:14,  b:2  },
+    {stop:0.63, r:155, g:22,  b:4  },
+    {stop:0.70, r:190, g:34,  b:4  },
+    {stop:0.76, r:160, g:24,  b:2  },
+    {stop:0.82, r:110, g:12,  b:2  },
+    {stop:0.88, r:60,  g:5,   b:1  },
+    {stop:1.00, r:20,  g:2,   b:0  }
+  ];
+
+  function skyColorAt(yFrac) {
+    for (var i = 0; i < SKY_BANDS.length - 1; i++) {
+      var a = SKY_BANDS[i], b = SKY_BANDS[i+1];
+      if (yFrac >= a.stop && yFrac <= b.stop) {
+        var t = (yFrac - a.stop) / (b.stop - a.stop);
+        return [
+          Math.round(a.r + (b.r - a.r) * t),
+          Math.round(a.g + (b.g - a.g) * t),
+          Math.round(a.b + (b.b - a.b) * t)
+        ];
+      }
+    }
+    return [20, 2, 0];
+  }
+
+  function drawSky() {
+    for (var y = 0; y < LH; y++) {
+      var c = skyColorAt(y / LH);
+      ctx.fillStyle = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+      ctx.fillRect(0, y, LW, 1);
+    }
+  }
+
+  /* ── cloud layers ── */
+  // Seeded LCG so cloud positions are consistent across frames
+  function lcg(seed) {
+    return function() { seed = (seed * 1664525 + 1013904223) & 0xffffffff; return (seed >>> 0) / 4294967296; };
+  }
+
+  var CLOUD_LAYERS = [
+    { color:[12,0,0],  speed:0.12, yMin:0.04, yMax:0.22, count:6, hMin:2, hMax:5, wMin:14, wMax:34 },
+    { color:[22,0,0],  speed:0.22, yMin:0.18, yMax:0.38, count:8, hMin:3, hMax:7, wMin:18, wMax:42 },
+    { color:[34,4,0],  speed:0.40, yMin:0.32, yMax:0.54, count:10, hMin:4, hMax:9, wMin:22, wMax:52 }
+  ];
+
+  // Build cloud rects once per layer (will offset via scrollX)
+  var cloudData = CLOUD_LAYERS.map(function(layer, li) {
+    var rng = lcg(42 + li * 7919);
+    var clouds = [];
+    for (var i = 0; i < layer.count; i++) {
+      var w = Math.round(layer.wMin + rng() * (layer.wMax - layer.wMin));
+      var h = Math.round(layer.hMin + rng() * (layer.hMax - layer.hMin));
+      var x = Math.round(rng() * LW * 2);   // spread across 2 screen-widths
+      var y = Math.round((layer.yMin + rng() * (layer.yMax - layer.yMin)) * LH);
+      // random blocky silhouette: 2-4 overlapping rects
+      var rects = [];
+      rects.push({x:0, y:Math.floor(h/2), w:w, h:Math.ceil(h/2)});   // base
+      var steps = 2 + Math.floor(rng() * 3);
+      for (var s = 0; s < steps; s++) {
+        var rx = Math.round(rng() * w * 0.7);
+        var rw = Math.round(w * 0.25 + rng() * w * 0.55);
+        rects.push({x:rx, y:0, w:rw, h:Math.round(h * 0.6 + rng() * h * 0.4)});
+      }
+      clouds.push({x:x, y:y, w:w, h:h, rects:rects});
+    }
+    return {layer:layer, clouds:clouds, scrollX:0};
+  });
+
+  function drawClouds() {
+    cloudData.forEach(function(cd) {
+      var c = cd.layer.color;
+      ctx.fillStyle = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+      cd.clouds.forEach(function(cl) {
+        var ox = (cl.x - cd.scrollX) % (LW * 2);
+        if (ox < -60) ox += LW * 2;
+        cl.rects.forEach(function(r) {
+          ctx.fillRect(ox + r.x, cl.y + r.y, r.w, r.h);
+        });
+      });
+    });
+  }
+
+  /* ── rocky terrain silhouette ── */
+  var rockProfile = null;
+  function buildRockProfile() {
+    rockProfile = new Int32Array(LW);
+    var baseY = Math.round(LH * 0.73);
+    var rng = lcg(133);
+    var y = baseY;
+    for (var x = 0; x < LW; x++) {
+      // Stepped, jagged pixel terrain: occasionally jump up/down by 1-4px
+      if (Math.floor(x % 3) === 0) {
+        var delta = Math.floor(rng() * 9) - 4;   // -4 .. +4
+        y = Math.max(Math.round(LH*0.65), Math.min(Math.round(LH*0.82), y + delta));
+      }
+      rockProfile[x] = y;
+    }
+  }
+
+  function drawRocks() {
+    ctx.fillStyle = 'rgb(10,2,0)';
+    for (var x = 0; x < LW; x++) {
+      var top = rockProfile[x];
+      ctx.fillRect(x, top, 1, LH - top);
+    }
+    // slightly lighter highlight row on crest
+    ctx.fillStyle = 'rgb(40,6,0)';
+    for (var x = 0; x < LW; x++) {
+      ctx.fillRect(x, rockProfile[x], 1, 1);
+    }
+  }
+
+  /* ── cobblestone floor ── */
+  var FLOOR_Y_FRAC = 0.945;
+  var STONE_W = 7, STONE_H = 4;
+
+  function drawFloor() {
+    var fy = Math.round(LH * FLOOR_Y_FRAC);
+    var fh = LH - fy;
+    if (fh <= 0) return;
+
+    // Fill base
+    ctx.fillStyle = 'rgb(14,4,0)';
+    ctx.fillRect(0, fy, LW, fh);
+
+    // Horizontal mortar lines
+    ctx.fillStyle = 'rgb(5,1,0)';
+    for (var y = fy; y < LH; y += STONE_H) {
+      ctx.fillRect(0, y, LW, 1);
+    }
+    // Vertical mortar lines — offset every other row for brick pattern
+    for (var row = 0; row * STONE_H + fy < LH; row++) {
+      var rowY = fy + row * STONE_H;
+      var xOff = (row % 2 === 0) ? 0 : Math.round(STONE_W / 2);
+      for (var x = xOff; x < LW + STONE_W; x += STONE_W) {
+        ctx.fillRect(x, rowY, 1, STONE_H);
+      }
+    }
+  }
+
+  /* ── scanlines ── */
+  function drawScanlines() {
+    ctx.fillStyle = 'rgba(0,0,0,0.14)';
+    for (var y = 0; y < LH; y += 2) {
+      ctx.fillRect(0, y, LW, 1);
+    }
+  }
+
+  /* ── animation loop ── */
+  var raf = null;
+  var lastT = null;
+  var running = true;
+
+  function tick(t) {
+    if (!running) return;
+    var dt = lastT ? Math.min((t - lastT) / 16.67, 4) : 1;
+    lastT = t;
+
+    // Advance cloud scrollX
+    cloudData.forEach(function(cd) {
+      cd.scrollX += cd.layer.speed * dt;
+      if (cd.scrollX > LW * 2) cd.scrollX -= LW * 2;
+    });
+
+    // Rebuild rock profile if LW changed (resize)
+    if (!rockProfile || rockProfile.length !== LW) buildRockProfile();
+
+    ctx.clearRect(0, 0, LW, LH);
+    drawSky();
+    drawClouds();
+    drawRocks();
+    drawFloor();
+    drawScanlines();
+
+    raf = requestAnimationFrame(tick);
+  }
+
+  raf = requestAnimationFrame(tick);
+
+  // Stop when portal fades out
+  var obs = new MutationObserver(function() {
+    if (ps.classList.contains('fade-out')) {
+      running = false;
+      if (raf) cancelAnimationFrame(raf);
+      obs.disconnect();
+    }
+  });
+  obs.observe(ps, {attributes:true, attributeFilter:['class']});
+})();
+</script>
 
 <script>
 (function() {
@@ -1258,7 +1482,7 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
 
   // iOS: replace rub mechanic with a single tap anywhere
   if (document.documentElement.classList.contains('ios-mode')) {
-    hint.textContent = '\u2726 tap to enter \u2726';
+    hint.textContent = 'TAP TO ENTER';
     screen.addEventListener('click', () => { if (!unlocked) go(); });
   }
 
