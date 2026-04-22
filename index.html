@@ -26,12 +26,7 @@
   html { scroll-behavior: smooth; }
 
   body {
-    background-color: #0D0D0D;
-    background-image:
-      linear-gradient(to right,  #1e1e1e 2px, transparent 2px),
-      linear-gradient(to bottom, #1e1e1e 2px, transparent 2px);
-    background-size: 82px 82px;
-    background-attachment: fixed;
+    background: transparent;
     color: var(--ink);
     font-family: var(--body);
     font-size: 17px;
@@ -46,7 +41,7 @@
     inset: 8px;
     border: 5px solid #FDFAF4;
     box-shadow:
-      inset 0 0 0 5px #0D0D0D,
+      inset 0 0 0 5px transparent,
       inset 0 0 0 8px #FDFAF4;
     pointer-events: none;
     z-index: 999;
@@ -71,7 +66,7 @@
     transform: translateX(-50%);
     z-index: 1002;
     pointer-events: none;
-    background: #0D0D0D;
+    background: rgba(13,13,13,0.88);
     padding: 0 18px;
     display: flex;
     align-items: center;
@@ -701,7 +696,7 @@
     position: fixed;
     top: 0; right: -420px; bottom: 0;
     width: 100%; max-width: 400px;
-    background: #0D0D0D;
+    background: rgba(13,13,13,0.96);
     border-left: 3px solid var(--ink);
     z-index: 301;
     display: flex;
@@ -841,7 +836,7 @@
   }
   #inquiry-overlay.open { display: flex; }
   .inquiry-box {
-    background: #0D0D0D;
+    background: rgba(13,13,13,0.96);
     border: 3px solid var(--ink);
     width: 100%; max-width: 500px;
     animation: lb-in 0.25s ease-out;
@@ -957,6 +952,9 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
 </script>
 </head>
 <body>
+
+<!-- Global 8-bit pixel sky background canvas -->
+<canvas id="bg-sky" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none"></canvas>
 
 <!-- Page border frame -->
 <div id="frame"></div>
@@ -3181,6 +3179,136 @@ updateCartCount();
   var isIOS = document.documentElement.classList.contains('ios-mode');
   var floatBtn = document.getElementById('feed-float-btn');
   if (floatBtn && !isIOS) floatBtn.style.display = 'flex';
+})();
+</script>
+
+<!-- Global 8-bit sky background animation -->
+<script>
+(function() {
+  var cvs = document.getElementById('bg-sky');
+  if (!cvs) return;
+
+  var SCALE = 4;
+  var ctx = cvs.getContext('2d');
+  var W = 0, H = 0, LW = 0, LH = 0;
+
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    LW = Math.ceil(W / SCALE); LH = Math.ceil(H / SCALE);
+    cvs.width = LW; cvs.height = LH;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* Sky gradient bands */
+  var SKY = [
+    {s:0.00, r:6,   g:0,  b:0},
+    {s:0.08, r:14,  g:0,  b:0},
+    {s:0.18, r:26,  g:2,  b:0},
+    {s:0.30, r:44,  g:4,  b:0},
+    {s:0.42, r:72,  g:8,  b:0},
+    {s:0.54, r:110, g:14, b:2},
+    {s:0.63, r:155, g:22, b:4},
+    {s:0.70, r:190, g:34, b:4},
+    {s:0.76, r:160, g:24, b:2},
+    {s:0.82, r:110, g:12, b:2},
+    {s:0.88, r:60,  g:5,  b:1},
+    {s:1.00, r:20,  g:2,  b:0}
+  ];
+
+  function skyAt(yf) {
+    for (var i = 0; i < SKY.length-1; i++) {
+      if (yf >= SKY[i].s && yf <= SKY[i+1].s) {
+        var t = (yf - SKY[i].s) / (SKY[i+1].s - SKY[i].s);
+        return [Math.round(SKY[i].r+(SKY[i+1].r-SKY[i].r)*t),
+                Math.round(SKY[i].g+(SKY[i+1].g-SKY[i].g)*t),
+                Math.round(SKY[i].b+(SKY[i+1].b-SKY[i].b)*t)];
+      }
+    }
+    return [20,2,0];
+  }
+
+  function drawSky() {
+    for (var y=0;y<LH;y++){var c=skyAt(y/LH);ctx.fillStyle='rgb('+c[0]+','+c[1]+','+c[2]+')';ctx.fillRect(0,y,LW,1);}
+  }
+
+  /* Seeded LCG */
+  function lcg(seed){return function(){seed=(seed*1664525+1013904223)&0xffffffff;return(seed>>>0)/4294967296;};}
+
+  /* Cloud layers */
+  var LAYERS=[
+    {col:[12,0,0],  spd:0.12, y0:0.04,y1:0.22, n:7,  hw:14,Hw:34, hh:2,Hh:5},
+    {col:[22,0,0],  spd:0.22, y0:0.18,y1:0.38, n:9,  hw:18,Hw:42, hh:3,Hh:7},
+    {col:[34,4,0],  spd:0.40, y0:0.32,y1:0.54, n:12, hw:22,Hw:52, hh:4,Hh:9}
+  ];
+
+  var clouds = LAYERS.map(function(L,li){
+    var rng=lcg(42+li*7919), list=[];
+    for(var i=0;i<L.n;i++){
+      var w=Math.round(L.hw+rng()*(L.Hw-L.hw));
+      var h=Math.round(L.hh+rng()*(L.Hh-L.hh));
+      var x=Math.round(rng()*LW*2);
+      var y=Math.round((L.y0+rng()*(L.y1-L.y0))*LH);
+      var rects=[{x:0,y:Math.floor(h/2),w:w,h:Math.ceil(h/2)}];
+      var steps=2+Math.floor(rng()*3);
+      for(var s=0;s<steps;s++){var rx=Math.round(rng()*w*0.7);var rw=Math.round(w*0.25+rng()*w*0.55);rects.push({x:rx,y:0,w:rw,h:Math.round(h*0.6+rng()*h*0.4)});}
+      list.push({x:x,y:y,rects:rects});
+    }
+    return {L:L,list:list,sx:0};
+  });
+
+  function drawClouds(){
+    clouds.forEach(function(cd){
+      var c=cd.L.col;ctx.fillStyle='rgb('+c[0]+','+c[1]+','+c[2]+')';
+      cd.list.forEach(function(cl){
+        var ox=(cl.x-cd.sx)%(LW*2);if(ox<-60)ox+=LW*2;
+        cl.rects.forEach(function(r){ctx.fillRect(ox+r.x,cl.y+r.y,r.w,r.h);});
+      });
+    });
+  }
+
+  /* Rocky terrain */
+  var rock=null;
+  function buildRock(){
+    rock=new Int32Array(LW);
+    var rng=lcg(133),y=Math.round(LH*0.73);
+    for(var x=0;x<LW;x++){
+      if(x%3===0){var d=Math.floor(rng()*9)-4;y=Math.max(Math.round(LH*0.65),Math.min(Math.round(LH*0.82),y+d));}
+      rock[x]=y;
+    }
+  }
+
+  function drawRocks(){
+    ctx.fillStyle='rgb(10,2,0)';
+    for(var x=0;x<LW;x++) ctx.fillRect(x,rock[x],1,LH-rock[x]);
+    ctx.fillStyle='rgb(40,6,0)';
+    for(var x=0;x<LW;x++) ctx.fillRect(x,rock[x],1,1);
+  }
+
+  /* Cobblestone floor */
+  var SW=7,SH=4;
+  function drawFloor(){
+    var fy=Math.round(LH*0.945),fh=LH-fy;if(fh<=0)return;
+    ctx.fillStyle='rgb(14,4,0)';ctx.fillRect(0,fy,LW,fh);
+    ctx.fillStyle='rgb(5,1,0)';
+    for(var y=fy;y<LH;y+=SH)ctx.fillRect(0,y,LW,1);
+    for(var row=0;row*SH+fy<LH;row++){var ry=fy+row*SH,xo=(row%2===0)?0:Math.round(SW/2);for(var x=xo;x<LW+SW;x+=SW)ctx.fillRect(x,ry,1,SH);}
+  }
+
+  /* Scanlines */
+  function drawScan(){ctx.fillStyle='rgba(0,0,0,0.14)';for(var y=0;y<LH;y+=2)ctx.fillRect(0,y,LW,1);}
+
+  /* Animate */
+  var last=null;
+  function tick(t){
+    var dt=last?Math.min((t-last)/16.67,4):1; last=t;
+    clouds.forEach(function(cd){cd.sx+=cd.L.spd*dt;if(cd.sx>LW*2)cd.sx-=LW*2;});
+    if(!rock||rock.length!==LW) buildRock();
+    ctx.clearRect(0,0,LW,LH);
+    drawSky();drawClouds();drawRocks();drawFloor();drawScan();
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
 })();
 </script>
 </body>
