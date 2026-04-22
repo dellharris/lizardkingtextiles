@@ -23,7 +23,7 @@
     --mono:       'Courier Prime', monospace;
   }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; background-color: #060000; }
 
   body {
     background: transparent;
@@ -141,7 +141,7 @@
   }
 
   /* ── Pages ── */
-  .page { display: none; min-height: 100vh; padding-top: 72px; }
+  .page { display: none; min-height: 100vh; padding-top: 72px; position: relative; z-index: 1; }
   .page.active { display: block; }
   #page-home { padding-top: 0; }
 
@@ -954,7 +954,7 @@ if (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
 <body>
 
 <!-- Global 8-bit pixel sky background canvas -->
-<canvas id="bg-sky" style="position:fixed;inset:0;width:100%;height:100%;z-index:-1;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none"></canvas>
+<canvas id="bg-sky" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none;-webkit-transform:translateZ(0);transform:translateZ(0)"></canvas>
 
 <!-- Page border frame -->
 <div id="frame"></div>
@@ -2825,15 +2825,13 @@ updateCartCount();
   background: rgba(0,0,0,0.65);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  display: none;
   opacity: 0;
-  visibility: hidden;
   pointer-events: none;
-  -webkit-transition: opacity 0.3s ease, visibility 0.3s ease;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 #feed-overlay.open {
-  opacity: 1;
-  visibility: visible;
   pointer-events: auto;
 }
 
@@ -3140,9 +3138,15 @@ updateCartCount();
     var ov = document.getElementById('feed-overlay');
     if (!ov) return;
     renderFeed();
-    /* rAF ensures visibility transition fires on iOS Safari */
+    /* iOS-safe: display:block → reflow → double-rAF → opacity triggers transition */
+    ov.style.display = 'block';
+    ov.style.pointerEvents = 'auto';
+    void ov.offsetWidth; // force reflow so transition fires
     requestAnimationFrame(function () {
-      ov.classList.add('open');
+      requestAnimationFrame(function () {
+        ov.style.opacity = '1';
+        ov.classList.add('open'); // triggers panel slide-in
+      });
     });
     document.body.style.overflow = 'hidden';
   };
@@ -3152,6 +3156,11 @@ updateCartCount();
     var ov = document.getElementById('feed-overlay');
     if (!ov) return;
     ov.classList.remove('open');
+    ov.style.opacity = '0';
+    ov.style.pointerEvents = 'none';
+    setTimeout(function () {
+      if (!ov.classList.contains('open')) ov.style.display = 'none';
+    }, 380);
     document.body.style.overflow = '';
   };
 
@@ -3161,18 +3170,11 @@ updateCartCount();
 
   /* ── iOS: called from hamburger menu "Artist Feed" ── */
   window.iosOpenFeed = function () {
-    /* Hide the iOS menu overlay immediately */
     var menuOv = document.getElementById('ios-menu-overlay');
-    if (menuOv) {
-      menuOv.classList.remove('open');
-      menuOv.style.display = 'none';
-    }
+    if (menuOv) menuOv.classList.remove('open');
     document.body.style.overflow = '';
-    /* Small delay so iOS finishes hiding the menu before feed paints */
-    setTimeout(function () {
-      if (menuOv) menuOv.style.display = '';
-      openFeed();
-    }, 60);
+    /* Let the menu start closing before feed opens */
+    setTimeout(openFeed, 100);
   };
 
   /* Show desktop float button (non-iOS only) */
